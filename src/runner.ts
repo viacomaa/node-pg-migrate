@@ -141,7 +141,7 @@ const getMigrationsToRun = (options: RunnerOption, runNames: string[], migration
   )
   let toRun = null
   if (count === undefined) {
-    toRun = upMigrations.slice(0, Math.abs(Infinity))
+    toRun = upMigrations
   } else {
     toRun = options.timestamp
       ? upMigrations.filter(({ timestamp }) => timestamp <= count)
