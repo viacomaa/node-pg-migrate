@@ -9,7 +9,7 @@
  and it makes inference of down migrations possible.
  */
 
-import { createSchemalize } from './utils'
+import { createSchemalize, getSchemas } from './utils'
 import { ColumnDefinitions } from './operations/tablesTypes'
 import { DB, MigrationBuilder, MigrationOptions, Logger } from './types'
 
@@ -29,6 +29,7 @@ import * as types from './operations/types'
 import * as views from './operations/views'
 import * as mViews from './operations/viewsMaterialized'
 import PgLiteral from './operations/PgLiteral'
+import { RunnerOption } from '.'
 
 export default class MigrationBuilderImpl implements MigrationBuilder {
   public readonly createExtension: (...args: Parameters<extensions.CreateExtension>) => void
@@ -195,7 +196,13 @@ export default class MigrationBuilderImpl implements MigrationBuilder {
 
   private _useTransaction: boolean
 
-  constructor(db: DB, typeShorthands: ColumnDefinitions | undefined, shouldDecamelize: boolean, logger: Logger) {
+  constructor(
+    db: DB,
+    typeShorthands: ColumnDefinitions | undefined,
+    logger: Logger,
+    private runnerOptions: RunnerOption,
+  ) {
+    const shouldDecamelize = Boolean(runnerOptions.decamelize);
     this._steps = []
     this._REVERSE_MODE = false
     // by default, all migrations are wrapped in a transaction
@@ -368,6 +375,10 @@ export default class MigrationBuilderImpl implements MigrationBuilder {
   getSqlSteps(): string[] {
     // in reverse mode, we flip the order of the statements
     return this._REVERSE_MODE ? this._steps.slice().reverse() : this._steps
+  }
+
+  getSchemas(defaultSchemas?: string[]): string[] {
+    return getSchemas(this.runnerOptions.schema, defaultSchemas)
   }
 }
 /* eslint-enable security/detect-non-literal-fs-filename */
