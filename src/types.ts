@@ -113,6 +113,7 @@ export interface MigrationBuilder {
   sql: (...args: Parameters<other.Sql>) => void
   func: (sql: string) => PgLiteral
   noTransaction: () => void
+  getSchemas: () => string[]
   db: DB
 }
 
