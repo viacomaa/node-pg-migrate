@@ -8,6 +8,7 @@ export interface CreateViewOptions {
   recursive?: boolean
   columns?: string | string[]
   checkOption?: 'CASCADED' | 'LOCAL'
+  noSchemaBinding?: boolean
   options?: ViewOptions
 }
 

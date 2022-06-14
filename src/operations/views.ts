@@ -25,7 +25,7 @@ export function dropView(mOptions: MigrationOptions) {
 
 export function createView(mOptions: MigrationOptions) {
   const _create: CreateView = (viewName, viewOptions, definition) => {
-    const { temporary, replace, recursive, columns = [], options = {}, checkOption } = viewOptions
+    const { temporary, replace, recursive, columns = [], options = {}, noSchemaBinding, checkOption } = viewOptions
     const columnNames = (Array.isArray(columns) ? columns : [columns]).map(mOptions.literal).join(', ')
     const withOptions = Object.keys(options).map(viewOptionStr(options)).join(', ')
 
@@ -35,9 +35,10 @@ export function createView(mOptions: MigrationOptions) {
     const columnStr = columnNames ? `(${columnNames})` : ''
     const withOptionsStr = withOptions ? ` WITH (${withOptions})` : ''
     const checkOptionStr = checkOption ? ` WITH ${checkOption} CHECK OPTION` : ''
+    const noSchemaBindingStr = noSchemaBinding ? ` WITH NO SCHEMA BINDING` : ''
     const viewNameStr = mOptions.literal(viewName)
 
-    return `CREATE${replaceStr}${temporaryStr}${recursiveStr} VIEW ${viewNameStr}${columnStr}${withOptionsStr} AS ${definition}${checkOptionStr};`
+    return `CREATE${replaceStr}${temporaryStr}${recursiveStr} VIEW ${viewNameStr}${columnStr}${withOptionsStr} AS ${definition}${checkOptionStr}${noSchemaBindingStr};`
   }
   _create.reverse = dropView(mOptions)
   return _create
