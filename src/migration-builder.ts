@@ -377,8 +377,8 @@ export default class MigrationBuilderImpl implements MigrationBuilder {
     return this._REVERSE_MODE ? this._steps.slice().reverse() : this._steps
   }
 
-  getSchemas(): string[] {
-    return getSchemas(this.runnerOptions.schema)
+  getSchemas(defaultSchemas?: string[]): string[] {
+    return getSchemas(this.runnerOptions.schema, defaultSchemas)
   }
 }
 /* eslint-enable security/detect-non-literal-fs-filename */

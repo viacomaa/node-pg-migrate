@@ -94,11 +94,11 @@ export const createTransformer = (literal: Literal) => (s: string, d?: { [key: s
     )
   }, s)
 
-export const getSchemas = (schema?: string | string[]): string[] => {
+export const getSchemas = (schema?: string | string[], defaultSchemas = ['public']): string[] => {
   const schemas = (Array.isArray(schema) ? schema : [schema]).filter(
     (s): s is string => typeof s === 'string' && s.length > 0,
   )
-  return schemas.length > 0 ? schemas : ['public']
+  return schemas.length > 0 ? schemas : defaultSchemas
 }
 
 export const getMigrationTableSchema = (options: RunnerOption): string =>
